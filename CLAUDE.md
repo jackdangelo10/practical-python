@@ -1,0 +1,1 @@
+Read python_study_guide.md in full before doing anything else.
