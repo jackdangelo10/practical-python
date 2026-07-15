@@ -203,8 +203,12 @@ file modes, encodings, newline handling, `pathlib` end-to-end, `tempfile`, atomi
 Classes, instance vs class attributes & shadowing, `@property`, `@classmethod`/`@staticmethod`,
 dunders (`__repr__`/`__str__` — and the `__repr__`→`eval()` round-trip convention, `__eq__`+`__hash__`
 contract, container/sequence dunders `__len__`/`__getitem__` (enables slicing)/`__contains__` (enables
-`in`), `__call__`), **duck typing** as a design principle (accept any object that behaves right, not a
-specific type), **bound methods** (`obj.meth` is a bound-method object carrying `__func__`/`__self__`;
+`in`), `__call__`), **operator overloading** — arithmetic dunders (`__add__`/`__sub__`/`__mul__`/
+`__truediv__`, reflected `__radd__`, in-place `__iadd__`), comparison dunders (`__lt__`/`__le__`/
+`__gt__`/`__ne__`, or derive them with `functools.total_ordering`), `__bool__`, `__format__` (powers
+`format()` / f-string specs), `__index__`, numeric conversions (`__int__`/`__float__`); context-manager
+protocol (`__enter__`/`__exit__`), **duck typing** as a design principle (accept any object that behaves
+right, not a specific type), **bound methods** (`obj.meth` is a bound-method object carrying `__func__`/`__self__`;
 the missing-parens trap where `f.close` silently does nothing), dynamic attribute access via the
 `getattr`/`setattr`/`hasattr`/`delattr` builtins (incl. `getattr(o, name, default)`),
 inheritance, `super()` & MRO, polymorphism (override & dispatch on type), **mixin pattern**
