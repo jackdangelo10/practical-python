@@ -59,6 +59,18 @@ One idea, one exercise, one check. Rotate deliberately among these drill types:
 7. **Design a Test** — given a signature + behavior spec, ask for table-driven pytest
    `parametrize` cases covering boundaries.
 8. **Spot the Smell** — code that *works* but violates good practice; ask what's wrong and why.
+9. **Concept / Design Q (no code required)** — a short-answer or explain-in-your-own-words prompt
+   that clanker writes as **prose to a file** (e.g. `answers/<topic>.md`), not a snippet. Use for
+   mechanism/theory ("walk through how `super()` uses the MRO in this diamond", "what is C3
+   linearization and when does it fail?", "explain data vs non-data descriptor precedence"),
+   Python-specifics ("why are default args evaluated once?", "how does `__hash__`/`__eq__` interact
+   with dict lookup?"), and small design questions ("ABC or Protocol here, and why?", "when is a
+   module-level singleton better than a class?"). Grade the *written explanation* against the
+   §9 quality bar for reasoning — mechanism-level, not vibes — the same way you'd grade code.
+
+**Not everything is a coding task.** Deliberately rotate type 9 in alongside the code drills. Some
+of the most important checks — MRO, the object model, descriptor precedence, EAFP vs LBYL, "why is
+this Pythonic" — are best answered in prose written to a file, and reviewed like any other diff.
 
 **Drill template:**
 ```
@@ -223,11 +235,27 @@ default_factory, frozen, slots), `NamedTuple`, `TypedDict`,
 *are* singletons (import-anywhere returns the same object — usually the right answer); `None`/`True`/
 `False`, enum members, and interned small ints are singletons; explicit patterns (`__new__`-based,
 metaclass, `@lru_cache` factory) and *why you rarely need them* — prefer a module or a plain shared
-instance. Introspection: `type()`, `isinstance()`,
-`obj.__dict__`/`__class__`/`type.__bases__`/`__mro__`, `globals()` & module `__dict__`, `dir()`/`help()`.
+instance. **Object system internals (get nitty-gritty here):**
+- *Objects are dicts.* Instance state lives in `obj.__dict__`; `vars(obj)` returns it; attribute
+  get/set/del map to dict ops. A class's methods live in its own `__dict__` (a read-only
+  `mappingproxy`). `__slots__` removes the per-instance `__dict__` entirely.
+- *Attribute lookup algorithm* for `obj.x`: type's data descriptors → instance `__dict__` →
+  type + MRO (non-data descriptors / plain class attrs) → `__getattr__` fallback → `AttributeError`.
+  Knowing this order explains shadowing, `@property` precedence, and descriptor behavior.
+- *Everything is an object, classes included.* `type` is the metaclass; a class is an instance of
+  `type`; `type(name, bases, namespace)` builds a class at runtime. Walk the graph with
+  `obj.__class__`, `Cls.__bases__`, `Cls.__mro__`, `isinstance`/`issubclass`.
+- *Namespaces are dicts.* `globals()` (module `__dict__`) vs `locals()`; a function's captured
+  globals via `func.__globals__`; module objects expose `mod.__dict__`.
+- Introspection tooling: `type()`, `isinstance()`, `dir()`, `help()`, `getattr`/`setattr`/`vars`.
+**MRO in depth:** C3 linearization — how `Cls.__mro__` is computed, why it guarantees a consistent
+order, the `TypeError: inconsistent hierarchy` you get when C3 can't linearize, and that `super()`
+delegates to the *next class in the MRO* (not the literal base) — the key to cooperative multiple
+inheritance and mixins.
 (Guide A → Classes & Object Creation, MRO, Dataclasses, Enum, NamedTuple and TypedDict)
-Advanced (L5+): descriptors, `__getattr__` vs `__getattribute__`, `__init_subclass__`,
-metaclasses (awareness level). (Guide A → Descriptor Protocol, Metaclasses)
+Advanced (L5+): descriptors (data vs non-data, `__get__`/`__set__`/`__set_name__`), `__getattr__`
+vs `__getattribute__`, `__init_subclass__`, metaclasses (awareness level).
+(Guide A → Descriptor Protocol, Metaclasses)
 
 **L6 — Stdlib Power Tools**
 `collections` (defaultdict, Counter, deque, ChainMap), `functools` (lru_cache, cached_property,
