@@ -199,8 +199,12 @@ decorators. (Guide A → Decorators)
 **L3 — Iteration Machinery**
 Iterable vs iterator, iterator exhaustion, `iter()` two-arg form, custom `__iter__`/`__next__`,
 generator functions, `yield from`, generator expressions vs list comps (memory), `send/throw/close`,
-`itertools` (chain, groupby, islice, tee, product, combinations, cycle, count, dropwhile, repeat),
-loop `else`, `StopIteration` semantics. Real-time/streaming plumbing: `tail -f`-style follower
+`itertools` — infinite: `count`/`cycle`/`repeat`; terminating: `chain`/`chain.from_iterable`
+(flatten), `islice`, `tee`, `accumulate` (running totals/max), `takewhile`/`dropwhile`, `compress`,
+`filterfalse`, `starmap`, `zip_longest` (`fillvalue=`), `groupby` (needs pre-sorted input!),
+`pairwise` (3.10+ sliding pairs), `batched` (3.12+ fixed-size chunks); combinatoric:
+`product`/`permutations`/`combinations`/`combinations_with_replacement`.
+Loop `else`, `StopIteration` semantics. Real-time/streaming plumbing: `tail -f`-style follower
 generators (`f.seek(0, os.SEEK_END)`, `readline()` returning `''` at EOF, `time.sleep` poll loop),
 producer→processor→consumer generator pipelines. (Guide A → Iterator Protocol, Generator Functions & yield)
 
@@ -269,8 +273,13 @@ vs `__getattribute__`, `__init_subclass__`, metaclasses (awareness level).
 
 **L6 — Stdlib Power Tools**
 `collections` (defaultdict, Counter, deque, ChainMap), `functools` (lru_cache, cached_property,
-singledispatch, wraps, reduce, total_ordering), `itertools` deep cuts, `re` (groups, non-greedy,
-finditer, compiled patterns), `datetime` + `zoneinfo` (aware vs naive, UTC-first discipline, DST
+singledispatch, wraps, reduce, total_ordering), `itertools` deep cuts (see L3 for the full set),
+`re` — **API:** `search`/`match`/`fullmatch`/`findall`/`finditer`/`sub`/`subn`/`split`/`escape`,
+`re.compile` for reused patterns, flags (`IGNORECASE`/`MULTILINE`/`DOTALL`/`VERBOSE`), match-object
+accessors (`.group()`/`.groups()`/`.groupdict()`/`.start()`/`.end()`/`.span()`), named groups
+`(?P<name>…)`, raw-string patterns (`r'...'`); **regex syntax itself:** anchors (`^`/`$`/`\b`),
+character classes, quantifiers (`*`/`+`/`?`/`{n,m}`, greedy vs `?` non-greedy), groups & alternation,
+backreferences, lookahead/lookbehind. `datetime` + `zoneinfo` (aware vs naive, UTC-first discipline, DST
 traps — Guide B → Time Library), `json` (custom encoders, `object_hook`, `parse_float`,
 non-serializable types — Guide B → JSON Library), `csv` (DictReader/DictWriter, dialects,
 quoting, newline='' trap), `gzip` (`gzip.open(path, 'rt')` — read/write compressed text streams),
