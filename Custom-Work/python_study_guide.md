@@ -247,8 +247,14 @@ collisions in subclasses, *not* a security boundary); public API is just "no und
 & managed attributes:** turn an attribute into a getter with `@property`, add `@x.setter`/`@x.deleter`;
 computed attributes, read-only attributes (property with no setter), validation on assignment; the
 **uniform access principle** (promote a plain attribute to a computed one without changing the API);
-backing-field pattern (`self._x` behind property `x`) and the setter-recursion trap. `@classmethod`
-(alt constructors) / `@staticmethod`,
+backing-field pattern (`self._x` behind property `x`) and the setter-recursion trap.
+**Method decorators — what each receives (the whole point):** a plain method gets the instance
+`self`; **`@classmethod`** gets the class `cls` instead — and because `cls` is the *actual* class
+called (inheritance-aware), it's the right tool for **alternate constructors** (`cls(...)` factories
+like `datetime.fromtimestamp`); **`@staticmethod`** gets *neither* — it's just a plain function
+namespaced inside the class (utility grouped with the type). All three are descriptors under the
+hood (ties back to attribute lookup). Related: `@property` (above), `@functools.cached_property`
+(compute-once instance attr), `@abstractmethod` (below), `@functools.total_ordering`.
 dunders (`__repr__`/`__str__` — and the `__repr__`→`eval()` round-trip convention, `__eq__`+`__hash__`
 contract, container/sequence dunders `__len__`/`__getitem__` (enables slicing)/`__contains__` (enables
 `in`), `__call__`), **operator overloading** — arithmetic dunders (`__add__`/`__sub__`/`__mul__`/
