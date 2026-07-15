@@ -212,7 +212,15 @@ file modes, encodings, newline handling, `pathlib` end-to-end, `tempfile`, atomi
 (Guide A → Exception Handling Deep Dive, Context Managers)
 
 **L5 — OOP & Data Modeling**
-Classes, instance vs class attributes & shadowing, `@property`, `@classmethod`/`@staticmethod`,
+Classes, instance vs class attributes & shadowing. **Encapsulation (Python-style):** no *true*
+private — "we're all consenting adults"; `_single_underscore` = "internal, hands off" convention
+(not enforced); `__double_leading` triggers **name mangling** to `_ClassName__x` (avoids attribute
+collisions in subclasses, *not* a security boundary); public API is just "no underscore". **`@property`
+& managed attributes:** turn an attribute into a getter with `@property`, add `@x.setter`/`@x.deleter`;
+computed attributes, read-only attributes (property with no setter), validation on assignment; the
+**uniform access principle** (promote a plain attribute to a computed one without changing the API);
+backing-field pattern (`self._x` behind property `x`) and the setter-recursion trap. `@classmethod`
+(alt constructors) / `@staticmethod`,
 dunders (`__repr__`/`__str__` — and the `__repr__`→`eval()` round-trip convention, `__eq__`+`__hash__`
 contract, container/sequence dunders `__len__`/`__getitem__` (enables slicing)/`__contains__` (enables
 `in`), `__call__`), **operator overloading** — arithmetic dunders (`__add__`/`__sub__`/`__mul__`/
@@ -231,7 +239,9 @@ qualifies — no inheritance needed, checked by mypy; `@runtime_checkable` for `
 rule — ABC = nominal (explicit subclassing, shared implementation, runtime enforcement), Protocol =
 structural (interfaces you don't own or don't want implementers coupled to). `@dataclass` (field,
 default_factory, frozen, slots), `NamedTuple`, `TypedDict`,
-`Enum`/`Flag`, `__slots__`, composition over inheritance. **Singletons the Pythonic way:** modules
+`Enum`/`Flag`, `__slots__` (declare a fixed attribute set — saves memory on many instances and
+guards against typo'd attribute names, at the cost of no per-instance `__dict__`), composition
+over inheritance. **Singletons the Pythonic way:** modules
 *are* singletons (import-anywhere returns the same object — usually the right answer); `None`/`True`/
 `False`, enum members, and interned small ints are singletons; explicit patterns (`__new__`-based,
 metaclass, `@lru_cache` factory) and *why you rarely need them* — prefer a module or a plain shared
