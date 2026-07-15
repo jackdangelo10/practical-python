@@ -187,7 +187,20 @@ element-by-element comparison; shallow vs deep copy; `enumerate(start=)`, `zip` 
 (list/dict/set, nested, conditional), membership & hashing basics, `pprint` for nested data.
 
 **L2 — Functions & Scope**
-`*args/**kwargs` (defining), call-site argument unpacking (`f(*seq)`, `f(**d)`, `Stock(*row)`),
+**The role of `*` and `**` — collect vs spread (drill this until reflexive):**
+- *Collect (packing), in a `def`:* `*args` gathers extra positionals into a **tuple**; `**kwargs`
+  gathers extra keywords into a **dict**. `*args` empty tuple / `**kwargs` empty dict when none passed.
+- *Collect, in assignment:* extended unpacking `a, *rest = seq`, `first, *mid, last = seq` (the star
+  target is always a **list**, even for one/zero items).
+- *Spread (unpacking), at a call site:* `f(*iterable)` splats positionals, `f(**mapping)` splats
+  keywords; combine `f(*a, **b)`. Powers "pass through" wrappers `def w(*a, **k): return f(*a, **k)`.
+- *Spread, in literals/displays (PEP 448):* `[*a, *b]`, `(*a,)`, `{*a, *b}` (set), `{**d1, **d2, 'k': v}`
+  (dict merge, later wins).
+- *The bare `*` and `/` separators in a signature:* `def f(a, *, b)` forces `b` **keyword-only**;
+  `def f(a, /, b)` forces `a` **positional-only**. Canonical full order:
+  `def f(pos_only, /, normal, *args, kw_only, **kwargs)`.
+- Don't confuse with the `*`/`**` **operators** (multiply / power) — same glyphs, unrelated.
+Also: call-site argument unpacking (`f(*seq)`, `f(**d)`, `Stock(*row)`),
 keyword-only & positional-only params, mutable default trap, LEGB, `global`/`nonlocal`,
 closures & late binding (Guide A → Comprehensions & Functional Programming), lambdas &
 callback/key functions, first-class functions, `functools.partial`, function docstrings (→ `help()`),
