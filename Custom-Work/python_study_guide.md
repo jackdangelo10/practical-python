@@ -202,8 +202,19 @@ element-by-element comparison; shallow vs deep copy; `enumerate(start=)`, `zip` 
 - Don't confuse with the `*`/`**` **operators** (multiply / power) — same glyphs, unrelated.
 Also: call-site argument unpacking (`f(*seq)`, `f(**d)`, `Stock(*row)`),
 keyword-only & positional-only params, mutable default trap, LEGB, `global`/`nonlocal`,
-closures & late binding (Guide A → Comprehensions & Functional Programming), lambdas &
-callback/key functions, first-class functions, `functools.partial`, function docstrings (→ `help()`),
+first-class functions (pass/store/return functions as values), `functools.partial`,
+function docstrings (→ `help()`).
+**Lambdas:** anonymous, **single-expression** functions with an implicit return — *no* statements,
+assignments, or annotations allowed; the body must be one expression. Use for short throwaway
+callbacks — `sorted(key=lambda r: r[1])`, `map`/`filter`, event handlers — and prefer a named `def`
+the moment it grows or needs a docstring. (A lambda assigned to a name is a style smell; just `def` it.)
+**Returning functions & closures:** a **closure** is a nested function that captures and remembers
+variables from its enclosing scope *after* the outer function has returned; **function factories**
+build specialized functions (`def make_adder(n): return lambda x: x + n`). Closures capture the
+**variable, not its value at definition time** — the root of the loop **late-binding** trap
+(`[lambda: i for i in range(3)]` all return 2; fix with a default arg `lambda i=i: i` or a factory).
+Use `nonlocal` to mutate captured state; closures are a lightweight, state-carrying alternative to a
+class. (Awareness: `func.__closure__` cells.) (Guide A → Comprehensions & Functional Programming)
 recursion basics. **Decorators:** writing function decorators (a callable taking a function and
 returning a wrapper closure), `@deco` as sugar for `f = deco(f)`, `functools.wraps` to preserve
 `__name__`/`__doc__`; awareness of decorator stacking, decorators-with-arguments, and class
