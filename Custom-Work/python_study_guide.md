@@ -208,9 +208,13 @@ specific type), **bound methods** (`obj.meth` is a bound-method object carrying 
 the missing-parens trap where `f.close` silently does nothing), dynamic attribute access via the
 `getattr`/`setattr`/`hasattr`/`delattr` builtins (incl. `getattr(o, name, default)`),
 inheritance, `super()` & MRO, polymorphism (override & dispatch on type), **mixin pattern**
-(cooperative multiple inheritance to inject behavior), ABCs vs Protocols — incl. the concrete
+(cooperative multiple inheritance to inject behavior), ABCs vs Protocols — the concrete
 `abc.ABC` / `@abstractmethod` mechanism (class can't be instantiated until subclasses implement the
-required methods), `@dataclass` (field, default_factory, frozen, slots), `NamedTuple`, `TypedDict`,
+required methods) *and* `typing.Protocol` for **structural** typing (any object with the right methods
+qualifies — no inheritance needed, checked by mypy; `@runtime_checkable` for `isinstance`); decision
+rule — ABC = nominal (explicit subclassing, shared implementation, runtime enforcement), Protocol =
+structural (interfaces you don't own or don't want implementers coupled to). `@dataclass` (field,
+default_factory, frozen, slots), `NamedTuple`, `TypedDict`,
 `Enum`/`Flag`, `__slots__`, composition over inheritance. **Singletons the Pythonic way:** modules
 *are* singletons (import-anywhere returns the same object — usually the right answer); `None`/`True`/
 `False`, enum members, and interned small ints are singletons; explicit patterns (`__new__`-based,
