@@ -179,7 +179,10 @@ element-by-element comparison; shallow vs deep copy; `enumerate(start=)`, `zip` 
 keyword-only & positional-only params, mutable default trap, LEGB, `global`/`nonlocal`,
 closures & late binding (Guide A → Comprehensions & Functional Programming), lambdas &
 callback/key functions, first-class functions, `functools.partial`, function docstrings (→ `help()`),
-recursion basics.
+recursion basics. **Decorators:** writing function decorators (a callable taking a function and
+returning a wrapper closure), `@deco` as sugar for `f = deco(f)`, `functools.wraps` to preserve
+`__name__`/`__doc__`; awareness of decorator stacking, decorators-with-arguments, and class
+decorators. (Guide A → Decorators)
 
 **L3 — Iteration Machinery**
 Iterable vs iterator, iterator exhaustion, `iter()` two-arg form, custom `__iter__`/`__next__`,
