@@ -207,9 +207,15 @@ contract, container/sequence dunders `__len__`/`__getitem__` (enables slicing)/`
 specific type), **bound methods** (`obj.meth` is a bound-method object carrying `__func__`/`__self__`;
 the missing-parens trap where `f.close` silently does nothing), dynamic attribute access via the
 `getattr`/`setattr`/`hasattr`/`delattr` builtins (incl. `getattr(o, name, default)`),
-inheritance, `super()` & MRO, **mixin pattern** (cooperative multiple inheritance to inject behavior),
-ABCs vs Protocols, `@dataclass` (field, default_factory, frozen, slots), `NamedTuple`, `TypedDict`,
-`Enum`/`Flag`, `__slots__`, composition over inheritance. Introspection: `type()`, `isinstance()`,
+inheritance, `super()` & MRO, polymorphism (override & dispatch on type), **mixin pattern**
+(cooperative multiple inheritance to inject behavior), ABCs vs Protocols — incl. the concrete
+`abc.ABC` / `@abstractmethod` mechanism (class can't be instantiated until subclasses implement the
+required methods), `@dataclass` (field, default_factory, frozen, slots), `NamedTuple`, `TypedDict`,
+`Enum`/`Flag`, `__slots__`, composition over inheritance. **Singletons the Pythonic way:** modules
+*are* singletons (import-anywhere returns the same object — usually the right answer); `None`/`True`/
+`False`, enum members, and interned small ints are singletons; explicit patterns (`__new__`-based,
+metaclass, `@lru_cache` factory) and *why you rarely need them* — prefer a module or a plain shared
+instance. Introspection: `type()`, `isinstance()`,
 `obj.__dict__`/`__class__`/`type.__bases__`/`__mro__`, `globals()` & module `__dict__`, `dir()`/`help()`.
 (Guide A → Classes & Object Creation, MRO, Dataclasses, Enum, NamedTuple and TypedDict)
 Advanced (L5+): descriptors, `__getattr__` vs `__getattribute__`, `__init_subclass__`,
