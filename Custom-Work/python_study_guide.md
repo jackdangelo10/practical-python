@@ -255,7 +255,10 @@ like `datetime.fromtimestamp`); **`@staticmethod`** gets *neither* — it's just
 namespaced inside the class (utility grouped with the type). All three are descriptors under the
 hood (ties back to attribute lookup). Related: `@property` (above), `@functools.cached_property`
 (compute-once instance attr), `@abstractmethod` (below), `@functools.total_ordering`.
-dunders (`__repr__`/`__str__` — and the `__repr__`→`eval()` round-trip convention, `__eq__`+`__hash__`
+dunders (`__repr__` vs `__str__` — **`__repr__` = accurate/unambiguous representation for developers**
+(ideally an `eval`-able round-trip like `Stock('GOOG', 100, 490.1)`, quotes and types visible, what the
+REPL and containers show); **`__str__` = readable output for end users** (what `print()`/`str()` show).
+`str` falls back to `repr` if undefined, not vice-versa — so define `__repr__` first. `__eq__`+`__hash__`
 contract, container/sequence dunders `__len__`/`__getitem__` (enables slicing)/`__contains__` (enables
 `in`), `__call__`), **operator overloading** — arithmetic dunders (`__add__`/`__sub__`/`__mul__`/
 `__truediv__`, reflected `__radd__`, in-place `__iadd__`), comparison dunders (`__lt__`/`__le__`/
@@ -313,8 +316,11 @@ backreferences, lookahead/lookbehind. `datetime` + `zoneinfo` (aware vs naive, U
 traps — Guide B → Time Library), `json` (custom encoders, `object_hook`, `parse_float`,
 non-serializable types — Guide B → JSON Library), `csv` (DictReader/DictWriter, dialects,
 quoting, newline='' trap), `gzip` (`gzip.open(path, 'rt')` — read/write compressed text streams),
-`math`, `pprint`, `sqlite3`, `logging` (levels, handlers, formatters, module loggers, lazy
-`%`-args `log.warning("row %d", n)`, `basicConfig`, never-print-in-libraries), `argparse` (or typer),
+`math`, `pprint`, `sqlite3`, `logging` (the five levels DEBUG/INFO/WARNING/ERROR/CRITICAL; root
+logger defaults to WARNING; per-module `getLogger(__name__)` pattern; handlers, formatters,
+`basicConfig`; lazy `%`-args `log.warning("row %d", n)`; `log.exception()`/`exc_info=True` inside
+`except` to capture the traceback; never-print-in-libraries — let the app configure handlers),
+`argparse` (or typer),
 `os`/`sys`/`subprocess` basics (incl. `print(..., end=, file=)`), `heapq`, `bisect`,
 `decimal` vs float for money.
 
@@ -327,8 +333,10 @@ import). **pytest**: asserts, `parametrize`, fixtures (scopes, yield fixtures),
 `unittest.mock` (patch targets — where it's *looked up*, not defined), doctests, coverage,
 test structure (arrange-act-assert), property-style thinking about edge cases.
 **unittest** (concrete API, not just awareness): `TestCase` subclassing, `test_`-prefix discovery,
-`unittest.main()`, `assertEqual`/`assertNotEqual`/`assertTrue`/`assertAlmostEqual(x,y,places)`,
-`assertRaises(exc, callable)` and the `with self.assertRaises(...)` form.
+`unittest.main()` / `python -m unittest`, `setUp`/`tearDown` (per-test fixtures) and
+`setUpClass`/`tearDownClass`, the assert family — `assertEqual`/`assertNotEqual`/`assertTrue`/
+`assertFalse`/`assertIsNone`/`assertIn`/`assertIsInstance`/`assertAlmostEqual(x,y,places)`,
+`assertRaises(exc, callable)` and the `with self.assertRaises(...)` form; skip/expectedFailure markers.
 **Debugging:** reading tracebacks (last line = actual cause; stack ordering), `repr()` to see
 accurate values (`Decimal('3.4')` vs `3.4`), `breakpoint()` / `pdb.set_trace()` / `python -m pdb`
 and the command set (`where`/`up`/`down`/`step`/`next`/`continue`/`list`/`args`/`break file:line`/
@@ -343,10 +351,18 @@ context managers/iterators — Guide B → Asyncio), generators vs lists for mem
 profiling (`time.perf_counter`, cProfile), big-O instincts, `sys.getsizeof`/memory awareness.
 
 **L9 — Project & Package Craft**
-Module vs package, `__init__.py`, absolute vs relative imports, `sys.path` / import resolution &
-`ImportError`, inspecting a module's file location (`<module 're' from '.../re.py'>`, stdlib vs
-site-packages), `sys.modules` import cache (modules execute once; edits need an interpreter
-restart to reload), import side effects & circular-import diagnosis (Guide A → Import System),
+Module vs package (a package is a directory of modules), **organizing a package** — role of
+`__init__.py` (marks the package, holds package-level API / re-exports so callers import from the
+package not deep submodules), `__all__` to control `from pkg import *` and define the public surface,
+when to split a module into a subpackage, src-layout so tests import the installed package cleanly.
+Absolute vs relative imports (`from . import x`, `from ..pkg import y`) — and the gotcha that
+**relative imports only work inside a package** (`ImportError: attempted relative import` when you run
+the file directly; use `python -m pkg.module` instead). `sys.path` / import resolution & `ImportError`,
+inspecting a module's file location (`<module 're' from '.../re.py'>`, stdlib vs site-packages),
+`sys.modules` import cache (modules execute once; edits need an interpreter restart to reload),
+**import gotchas:** naming your file after a stdlib module (`random.py`, `queue.py`, `email.py`)
+shadows the real one; import side effects (top-level code runs on first import); circular-import
+diagnosis & fixes (defer the import into a function, or restructure) (Guide A → Import System),
 `if __name__ == "__main__"`, `python -m package.module` (run a submodule as a script; why running a
 bare file breaks `sys.path`), executable scripts (shebang `#!/usr/bin/env python3` + `chmod +x`),
 program exit via `sys.exit(code)`/`raise SystemExit('msg')` & exit-code convention (non-zero = error),
