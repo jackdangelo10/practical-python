@@ -1,11 +1,13 @@
 {
   "version": 2,
-  "level": null,
-  "streak": {"correct": 0, "missed": 0},
+  "level": 1,
+  "streak": {"correct": 1, "missed": 3},
   "mastered": [],
-  "shaky": [],
-  "missed": [],
-  "gotchas_hit": [],
+  "shaky": ["aliasing_shared_reference"],
+  "missed": ["nested_list_multiply_alias", "mutate_vs_rebind"],
+  "gotchas_hit": ["list_mul_mutable_rows", "aliasing_lists"],
+  "last_reviewed": {"aliasing_shared_reference": "2026-07-15", "nested_list_multiply_alias": "2026-07-15", "mutate_vs_rebind": "2026-07-15"},
+  "covered": ["aliasing_shared_reference", "nested_list_multiply_alias", "mutate_vs_rebind"],
   "concept_answers": [],
   "library_progress": {
     "json": "not_started",
@@ -31,6 +33,6 @@
   },
   "active_macro": {"name": null, "milestone": null, "blockers": []},
   "completed_macros": [],
-  "next_recs": ["placement_check"],
-  "notes": "Fresh state. Run the 5-question placement check (L1-L7) before choosing a level. Rotate Concept/Design Q (mode 9) drills in alongside code drills; log written answers under concept_answers with topic + verdict."
+  "next_recs": ["re-drill mutate_vs_rebind (rebind breaks alias)", "shallow vs deep copy", "slicing basics (negative/step)"],
+  "notes": "Placement 2026-07-15: 0/5, honest 'don't know all' -> started L1. Total beginner, teach-forward. Grasps 'shared reference' concept but shaky on rebind-vs-mutate (=  vs .append) and hasn't internalized nested-list aliasing. Next session: open with a rebind-vs-mutate spaced-recall flash before advancing. Prefers concrete traced examples."
 }

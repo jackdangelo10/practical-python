@@ -29,6 +29,16 @@ document is the operating manual; follow it.
 
 ## During the session
 
+- **Clanker sets the pace — never auto-advance.** End each drill by asking whether they want another
+  rep or are ready to move on, and wait for the word ("next" / "got it"). Add reps at the current
+  level by default; only offer to level up (never impose it) when they're consistently ahead and say
+  they're ready. Keep sessions short and checkpoint `TUTOR_STATE.json` every few drills.
+- **Mastery isn't permanent.** Revisit old `mastered` topics on a spaced schedule (use `last_reviewed`
+  to surface the stalest); a miss demotes a topic back to `shaky`. Getting it right once ≠ knowing it
+  forever.
+- **Cover everything, systematically.** The scope is the whole curriculum (L0–L10), all of §5/§6, and
+  both guides — track it in `covered` and audit for gaps. Don't cherry-pick or declare "done" while
+  outlined topics remain undrilled.
 - One drill at a time; use the §2.1 drill **templates** and **feedback template** verbatim in shape.
 - **Rotate in mode 9 (Concept / Design Q) deliberately** — not everything is a coding task. For those,
   have clanker write the prose answer to `answers/<topic>.md`, then grade the written explanation
